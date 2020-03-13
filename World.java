@@ -13,8 +13,9 @@ import java.util.Scanner;
 
 /*
 -- finish the implementation of "intro4"/individual locations                   (x)
--- create a structure for progressing through days                              (/)
--- link locations to prices                                                     ()
+-- create a structure for progressing through days                              (x)
+-- link locations to prices - location from food to classes                     (x)
+-- upgrade() method -> if sufficient money -> double check / if not -> reply    ()
 -- figure out how to gather the user's name                                     ()
 -- use the same method to get a location for the farm                           ()
 -- give the location attributes and create animal classes                       ()
@@ -26,9 +27,9 @@ import java.util.Scanner;
 
 public class World {
     
-    private String name, location;
+    private String location;
     private int week = 1;
-    private double money = 100;
+    private double money = 100.00;
     
     private boolean intro1;
     private boolean intro2;
@@ -40,15 +41,14 @@ public class World {
     private boolean introWarmlands;
     private boolean locationChoice;
     private boolean endIntro;
-    private boolean runGame;
-    private boolean endDay;
+    private boolean runDay;
     private boolean menu;
     
     private int introLocation = 0;
     
     Scanner kb = new Scanner(System.in);
     
-     public World() {
+    public World() {
          
     }
     
@@ -63,13 +63,17 @@ public class World {
             System.out.println("~~~~~~~~~~~~~~~~~\n      RULES\n~~~~~~~~~~~~~~~~~"
                     + "\n\n~You have 52 weeks to run your farm and make the most money possible! Choose a location based on"
                     + "\nthe benefits it provides, then purchase your animals and raise them to the highest value!~"
-                    + "\n\n\t/rules - use at any time to print rules\n\t/close - use to close game at any time\n\n~~~~~~~~~");
+                    + "\n\n\t/rules - use at any time to print rules\n\t/close - use to close game at any time"
+                    + "\n\t/money - use to print money at any time\n\n~~~~~~~~~");
         }
         if ((response.equals("exit") || response.equals("Exit") || response.equals("exit game") || response.equals("Exit Game")) && menu) {
             System.exit(0);
         }
         if (response.equals("/close")) {
             System.exit(0);
+        }
+        if (response.equals("/money")) {
+            System.out.println("~~~~~~~\nMONEY : $ " + String.format("%.2f", money) + "\n~~~~~~~");
         }
         if (intro1) {
             if (response.equals("")){
@@ -106,25 +110,25 @@ public class World {
         }
         if (locationChoice) {
             if (response.equals("plains") || response.equals("Plains")){
-                intro4 = false; response = " "; location = "plains"; endIntro = true;
-                printIntro(); runGame(location); runGame = true;
+                intro4 = false; response = " "; location = "plains"; Food.location = location; endIntro = true;
+                printIntro(); runWeek(location); runDay = true;
             }
             if (response.equals("desert") || response.equals("Desert")){
-                intro4 = false; response = " "; location = "desert"; endIntro = true;
-                printIntro(); runGame(location); runGame = true;
+                intro4 = false; response = " "; location = "desert"; Food.location = location; endIntro = true;
+                printIntro(); runWeek(location); runDay = true;
             }
             if (response.equals("ranch") || response.equals("Ranch")){
-                intro4 = false; response = " "; location = "ranch"; endIntro = true;
-                printIntro(); runGame(location); runGame = true;
+                intro4 = false; response = " "; location = "ranch"; Food.location = location; endIntro = true;
+                printIntro(); runWeek(location); runDay = true;
             }
             if (response.equals("warmlands") || response.equals("Warmlands")){
-                intro4 = false; response = " "; location = "warmlands"; endIntro = true;
-                printIntro(); runGame(location); runGame = true;
+                intro4 = false; response = " "; location = "warmlands"; Food.location = location; endIntro = true;
+                printIntro(); runWeek(location); runDay = true;
             }
         }
-        if (runGame) {
-            if (response.equals("end day") || response.equals("End Day")) {
-                endDay = true;
+        if (runDay) {
+            if (response.equals("end week") || response.equals("End Week")) {
+                week++; runWeek(location);
             }
         }
     }
@@ -192,18 +196,62 @@ public class World {
         }
     }
     
-    public void runGame(String location) {
-//        do {
-        for (int i = week; i <= 60; i++) {
-            System.out.println("|-------------------------||-------------------------|\n\tDAY: " + week + "\n\tMONEY: $ " + 
-                    String.format("%.2f", money) + "\n\nMARKET PRICES: \n\n\tCOW:     $ " + String.format("%.2f", Cow.price) + 
-                    "\t  WHEAT: $" + String.format("%.2f", Wheat.price) + "\n\tPIG:     $ " + String.format("%.2f", Pig.price) + 
-                    "\t  SLOP:  $" + String.format("%.2f", Slop.price) + "\n\tCHICKEN: $ " + 
-                    String.format("%.2f", Chicken.price) + "\t\t  SEED:  $" + String.format("%.2f", Seed.price) +
-                    "\n|-------------------------||-------------------------|");
-            week++;
+    public void runWeek(String location) {
+        if (week <= 52) {
+            if (location.equals("ranch")) {
+                
+                System.out.println("|-------------------------||-------------------------|\n\tWEEK: " + week + "\n\tMONEY: $ " + 
+                        String.format("%.2f", money) + "\n\nMARKET PRICES: \n\n\tCOW:     $ " + String.format("%.2f", Cow.price) + 
+                        "\t  WHEAT: $" + String.format("%.2f", Wheat.priceRanch) + "\n\tPIG:     $ " + String.format("%.2f", Pig.price) + 
+                        "\t  SLOP:  $" + String.format("%.2f", Slop.priceRanch) + "\n\tCHICKEN: $ " + 
+                        String.format("%.2f", Chicken.price) + "\t\t  SEED:  $" + String.format("%.2f", Seed.priceRanch) +
+                        "\n\nYOUR INVENTORY:\n\t\t\t\t(weekly servings)\n\tCOWS:    " + Cow.amount + "\t\t  WHEAT: " + Wheat.amount +
+                        "\n\tPIGS:    " + Pig.amount + "\t\t  SLOP:  " + Slop.amount + 
+                        "\n\tCHICKEN: " + Chicken.amount + "\t\t  SEED:  " + Seed.amount + 
+                        "\n|-------------------------||-------------------------|");
+                System.out.println("~~~~~~~\n\tWhat would you like to do?\n\t\t-  Buy Food\n\t\t-  Buy Animals"
+                        + "\n\t\t-  Check Hunger\n\t\t-  Upsize Farm\n~~~~~~~");
+            }
+            if (location.equals("warmlands")) {
+                System.out.println("|-------------------------||-------------------------|\n\tWEEK: " + week + "\n\tMONEY: $ " + 
+                        String.format("%.2f", money) + "\n\nMARKET PRICES: \n\n\tCOW:     $ " + String.format("%.2f", Cow.price) + 
+                        "\t  WHEAT: $" + String.format("%.2f", Wheat.priceWarmlands) + "\n\tPIG:     $ " + String.format("%.2f", Pig.price) + 
+                        "\t  SLOP:  $" + String.format("%.2f", Slop.priceWarmlands) + "\n\tCHICKEN: $ " + 
+                        String.format("%.2f", Chicken.price) + "\t\t  SEED:  $" + String.format("%.2f", Seed.priceWarmlands) +
+                        "\n\nYOUR INVENTORY:\n\t\t\t\t(weekly servings)\n\tCOWS:    " + Cow.amount + "\t\t  WHEAT: " + Wheat.amount +
+                        "\n\tPIGS:    " + Pig.amount + "\t\t  SLOP:  " + Slop.amount + 
+                        "\n\tCHICKEN: " + Chicken.amount + "\t\t  SEED:  " + Seed.amount +
+                        "\n|-------------------------||-------------------------|");
+                System.out.println("~~~~~~~\n\tWhat would you like to do?\n\t\t-  Buy Food\n\t\t-  Buy Animals"
+                        + "\n\t\t-  Check Hunger\n\t\t-  Upsize Farm\n~~~~~~~");
+            }
+            if (location.equals("desert")) {
+                System.out.println("|-------------------------||-------------------------|\n\tWEEK: " + week + "\n\tMONEY: $ " + 
+                        String.format("%.2f", money) + "\n\nMARKET PRICES: \n\n\tCOW:     $ " + String.format("%.2f", Cow.price) + 
+                        "\t  WHEAT: $" + String.format("%.2f", Wheat.priceDesert) + "\n\tPIG:     $ " + String.format("%.2f", Pig.price) + 
+                        "\t  SLOP:  $" + String.format("%.2f", Slop.priceDesert) + "\n\tCHICKEN: $ " + 
+                        String.format("%.2f", Chicken.price) + "\t\t  SEED:  $" + String.format("%.2f", Seed.priceDesert) +
+                        "\n\nYOUR INVENTORY:\n\t\t\t\t(weekly servings)\n\tCOWS:    " + Cow.amount + "\t\t  WHEAT: " + Wheat.amount +
+                        "\n\tPIGS:    " + Pig.amount + "\t\t  SLOP:  " + Slop.amount + 
+                        "\n\tCHICKEN: " + Chicken.amount + "\t\t  SEED:  " + Seed.amount +
+                        "\n|-------------------------||-------------------------|");
+                System.out.println("~~~~~~~\n\tWhat would you like to do?\n\t\t-  Buy Food\n\t\t-  Buy Animals"
+                        + "\n\t\t-  Check Hunger\n\t\t-  Upsize Farm\n~~~~~~~");
+            }
+            if (location.equals("plains")) {
+                System.out.println("|-------------------------||-------------------------|\n\tWEEK: " + week + "\n\tMONEY: $ " + 
+                        String.format("%.2f", money) + "\n\nMARKET PRICES: \n\n\tCOW:     $ " + String.format("%.2f", Cow.price) + 
+                        "\t  WHEAT: $" + String.format("%.2f", Wheat.pricePlains) + "\n\tPIG:     $ " + String.format("%.2f", Pig.price) + 
+                        "\t  SLOP:  $" + String.format("%.2f", Slop.pricePlains) + "\n\tCHICKEN: $ " + 
+                        String.format("%.2f", Chicken.price) + "\t\t  SEED:  $" + String.format("%.2f", Seed.pricePlains) +
+                        "\n\nYOUR INVENTORY:\n\t\t\t\t(weekly servings)\n\tCOWS:    " + Cow.amount + "\t\t  WHEAT: " + Wheat.amount +
+                        "\n\tPIGS:    " + Pig.amount + "\t\t  SLOP:  " + Slop.amount + 
+                        "\n\tCHICKEN: " + Chicken.amount + "\t\t  SEED:  " + Seed.amount +
+                        "\n|-------------------------||-------------------------|");
+                System.out.println("~~~~~~~\n\tWhat would you like to do?\n\t\t-  Buy Food\n\t\t-  Buy Animals"
+                        + "\n\t\t-  Check Hunger\n\t\t-  Upsize Farm\n~~~~~~~");
+            }
         }
-//        } while(!endDay);
     }
     
 }

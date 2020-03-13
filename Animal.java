@@ -12,9 +12,19 @@ package animaltycoon;
 public class Animal {
     
     private double price;
+    private String location;
+    public static int amount;
     
-    public Animal (double price) {
+    public Animal (double price, int amount) {
         this.price = price;
+        this.amount = amount;
     }
+
+//    public String getLocation() {
+//        return location;
+//    }
+//    public void setLocation(String location) {
+//        this.location = location;
+//    }
     
 }

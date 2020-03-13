@@ -14,7 +14,7 @@ public class Chicken extends Animal {
     public static double price = 6.00;
     
     public Chicken () {
-        super(price);
+        super(price, amount);
     }
     
 }

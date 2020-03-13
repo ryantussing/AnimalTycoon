@@ -11,10 +11,14 @@ package animaltycoon;
  */
 public class Slop extends Food {
     
-    public static double price = 3.00;
+    public static double price;
+    public static double pricePlains = 3.00;
+    public static double priceRanch = 4.50;
+    public static double priceWarmlands = 3.50;
+    public static double priceDesert = 5.50;
     
-    public Slop () {
-        super(price);
+    public Slop() {
+        super(pricePlains, priceRanch, priceDesert, priceWarmlands, location, amount);
     }
     
 }

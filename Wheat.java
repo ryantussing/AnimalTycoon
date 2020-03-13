@@ -11,10 +11,14 @@ package animaltycoon;
  */
 public class Wheat extends Food {
     
-    public static double price = 4.00;
+    public static double price;
+    public static double pricePlains = 4.00;
+    public static double priceRanch = 5.50;
+    public static double priceWarmlands = 4.50;
+    public static double priceDesert = 6.50;
     
     public Wheat () {
-        super(price);
+        super(pricePlains, priceRanch, priceDesert, priceWarmlands, location, amount);
     }
     
 }
